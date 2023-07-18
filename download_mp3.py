@@ -12,11 +12,9 @@ def getUrls(playlist_url):
     
     return urls, playlist_name
 
-def getMP3fromLink(video_link, playlist_name = ""):
+def getMP3fromLink(video_link, destination,playlist_name = ""):
     youtube_vid = pytube.YouTube(video_link)
     video = youtube_vid.streams.filter(only_audio=True).first()
-
-    destination = r"C:\Users\shashg\Downloads\prisha"
 
     out_file = video.download(output_path=destination)
 
@@ -31,18 +29,19 @@ def getMP3fromLink(video_link, playlist_name = ""):
     track.save()
     print(youtube_vid.title + " is downloaded")
 
-def getMP4fromLink(video_link):
+def getMP4fromLink(video_link, destination):
     yt = pytube.YouTube(video_link)
     mp4files = yt.filter('mp4') 
-    SAVE_PATH = r"C:\shashg\Downloads\test_mp4"
     # get the video with the extension and
     # resolution passed in the get() function 
     d_video = yt.get(mp4files[-1].extension,mp4files[-1].resolution)
+    SAVE_PATH = os.path.join(destination, yt.title)
     d_video.download(SAVE_PATH)
     print('COMPLETED')
 
 if __name__ == '__main__' :
-    playlist_url = sys.argv[1]
+    destination = sys.argv[1]
+    playlist_url = sys.argv[2]
     urls, playlist_name = getUrls(playlist_url)
     for url in urls:
         getMP3fromLink(url, playlist_name)
